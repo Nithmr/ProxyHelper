@@ -96,8 +96,8 @@ class TorPinger(object):
             time.sleep(self.timeout_one_check)
         ## If we get away from loop due to timeout, then exit
         if len(SOCKS) == 0:
-            print('Sorry dude couldn\'t find any active tor connection in the\
-                    given time, exitting')
+            print('Sorry dude - couldn\'t find any active Tor connection in the'
+		 ' given time, exiting.')
             return 
         ## Else we are good to go and have a list of open tor sockets
         ## Of which we choose the one with highest priority
