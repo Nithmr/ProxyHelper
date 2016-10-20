@@ -1,0 +1,47 @@
+#!/usr/bin/python3
+from subprocess import os
+import sys,re
+
+def checkUser():
+    if os.geteuid() == 0:
+        sys.exit('Run without sudo!!')
+
+if __name__ == '__main__':
+    # exit if root
+    checkUser()
+
+    home = os.environ.get('HOME')
+    zetproxyPath = home+'/.proxyhelper/zetproxy'
+    proxyhelperPath = home+'/.proxyhelper/proxyhelper.py'
+    torpingerPath = home+'/.proxyhelper/torpinger'
+    uninstallPath = home+'/proxyhelper/uninstall.py'
+
+    if not re.sub("\/.*\/.*\/",'',os.getcwd()) == '.proxyhelper':
+        sys.exit('Exiting. This script should be run from "~/.proxyhelper" directory')
+
+    os.chmod(zetproxyPath, stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+    os.chmod(proxyhelperPath, stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+    os.chmod(torpingerPath, stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+    os.chmod(uninstallPath, stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+
+
+    # Remove earlier installations if they exist
+    # Needs for people with earlier version of PH
+    # Which might clash
+    if os.path.isfile('/usr/bin/phelp'):
+        subprocess.call('sudo rm /usr/bin/phelp', shell=True)
+    if os.path.isfile('/usr/bin/zetproxy'):
+        subprocess.call('sudo rm /usr/bin/zetproxy', shell=True)
+        os.system('sudo rm /usr/bin/zetproxy')
+    if os.path.isfile('/usr/bin/torpinger'):
+        subprocess.call('sudo rm /usr/bin/torpinger', shell=True)
+    if os.path.isfile('/etc/network/if-up.d/zetproxy'):
+        subprocess.call('sudo rm /etc/network/if-up.d/zetproxy', shell=True)
+    if os.path.isfile('/etc/network/if-up.d/torpinger'):
+        subprocess.call('sudo rm /etc/network/if-up.d/torpinger', shell=True)
+
+    subprocess.call('sudo ln -s zetproxyPath /etc/network/if-up.d/', shell=True)
+    subprocess.call('sudo ln -s torpingerPath /etc/network/if-up.d/', shell=True)
+    subprocess.call('sudo ln -s proxyhelperPath /usr/bin/phelp', shell=True)
+
+    print ('Installation Complete')

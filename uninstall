@@ -1,0 +1,13 @@
+#!/usr/bin/python3
+import sys
+from subprocess import os
+
+# exit if not root
+if not os.geteuid() == 0:
+    sys.exit('This script should be run with root permission')
+
+os.remove('/etc/network/if-up.d/torpinger')
+os.remove('/etc/network/if-up.d/zetproxy')
+os.remove('/usr/bin/phelp')
+
+print ('Uninstallation Complete')
