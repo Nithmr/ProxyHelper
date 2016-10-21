@@ -9,7 +9,7 @@ fi
 
 home=$HOME
 
-if [ ! $(basename $(pwd)) = '.proxyhelper' ]
+if [ ! $(basename  $PWD) = '.proxyhelper' ]
 then
     echo Exiting. This script should be run from "~/.proxyhelper" directory
     exit
