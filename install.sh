@@ -9,7 +9,7 @@ fi
 
 home=$HOME
 
-if [ ! $(pwd | sed 's/\/.*\/.*\///') = '.proxyhelper' ]
+if [ ! $(basename $(pwd)) = '.proxyhelper' ]
 then
     echo Exiting. This script should be run from "~/.proxyhelper" directory
     exit
