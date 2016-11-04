@@ -1,21 +1,20 @@
-#!/bin/bash
+#!/usr/bin/python3
 
+from subprocess import os,Popen,PIPE
+import sys,re
 
-# exit if not root
-if [ ! $(id -u) -eq 0 ]
-then
-	echo 'This script should be run with root permission'
-	exit
-fi
+def checkUser():
+    if os.geteuid() == 0:
+        sys.exit('Run without sudo!!')
 
-SOCKS=$(torpinger -tw | tail -1)
-key=$(echo $SOCKS | sed 's/Port: .*/Port/')
-if [[ $key = "Port" ]]
-then
-    PORT=$(echo $SOCKS | sed 's/Port: \(.*\)/\1/')
-    echo The port is $PORT 
-    zetproxy Socks $PORT
-else
-    echo No tor, no point, exitting
-fi
+if __name__ == '__main__':
+    checkUser()
+    socks = 'torpinger -tw | tail -1'
+    key = re.sub("Port: .*\/Port",'',os.popen(socks).stdout.read())
 
+    if key == "Port":
+        port = re.sub("Port: \(.*\)\/1",'',Popen(socks, stdout=subprocess.PIPE).stdout.read())
+        print ("The port is {}".format(port))
+        os.system("zetproxy Socks {}".format(port))
+    else:
+        print ('No tor, no point, exitting')
