@@ -9,6 +9,30 @@ fi
 
 home=$HOME
 
+echo "Enter proxy info for curl? (y/n)"
+echo
+read answer
+echo
+if [ "$answer" == "y" ]; then
+  echo "Enter proxy info <proxyhost>:<proxyport>:"
+	echo
+	read proxyinfo
+	echo
+	echo "proxy = $proxyinfo" >> $HOME/.curlrc
+
+	if [ $? == 0 ]; then
+    echo "$HOME/.curlrc appended successfully."
+		echo
+  else
+    echo "writing ${HOME}/.curlrc failed"
+  fi
+
+elif [ "$answer" == "n" ]; then
+	:
+else
+	echo "unrecognized input, skipping..."
+fi
+
 if [ ! $(pwd | sed 's/\/.*\/.*\///') = '.proxyhelper' ]
 then
     echo Exiting. This script should be run from "~/.proxyhelper" directory
@@ -25,7 +49,7 @@ chmod +x $home/.proxyhelper/uninstall.sh
 # Needs for people with earlier version of PH
 # Which might clash
 if [ -x "$(command -v /usr/bin/phelp)" ]
-then 
+then
     sudo rm /usr/bin/phelp
 fi
 if [ -x "$(command -v /usr/bin/zetproxy)" ]
@@ -33,7 +57,7 @@ then
     sudo rm /usr/bin/zetproxy
 fi
 if [ -x "$(command -v /usr/bin/torpinger)" ]
-then 
+then
     sudo rm /usr/bin/torpinger
 fi
 if [ -x "$(command -v /etc/network/if-up.d/zetproxy)" ]
@@ -41,7 +65,7 @@ then
     sudo rm /etc/network/if-up.d/zetproxy
 fi
 if [ -x "$(command -v /etc/network/if-up.d/torpinger)" ]
-then 
+then
     sudo rm /etc/network/if-up.d/torpinger
 fi
 # symlinks fail if the path is not absolute
